@@ -1,0 +1,28 @@
+{
+"totalBudget": 10000,
+"envelopes": [{
+    "id": 1,
+    "name": "Personal",
+    "budget": 2000
+}, {
+    "id": 2,
+    "name": "Housing",
+    "budget": 1000
+}, {
+    "id": 3,
+    "name": "Utilities",
+    "budget": 500
+}, {
+    "id": 4,
+    "name": "Food",
+    "budget": 1000
+}, {
+    "id": 5,
+    "name": "Transportation",
+    "budget": 500
+}, {
+    "id": 6,
+    "name": "Insurance",
+    "budget": 1000
+}]
+}
