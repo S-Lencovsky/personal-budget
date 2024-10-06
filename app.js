@@ -86,16 +86,15 @@ app.put('/envelopes/:name', (req, res) => {
 
 // DELETE request to delete specific envelope
 app.delete('/envelopes/:name', (req, res) => {
-    const envelope = envelopes.findIndex(e => e.name.toLowerCase() === req.params.name.toLowerCase());
-    if (envelopeIndex === -1) {
+    const envelope = envelopes.find(e => e.name.toLowerCase() === req.params.name.toLowerCase());
+    if (!envelope) {
         return res.status(404).json({ message: 'Envelope not found.' });
     }
-    const index = envelopes.indexOf(envelope);
-    envelopes.splice(index, 1);
+
+    envelopes = envelopes.filter(e => e.name.toLowerCase() !== req.params.name.toLowerCase());
     totalBudget -= envelope.budget;
     res.json({ message: 'Envelope deleted', envelope });
 });
-
 
 // Start the server
 const PORT = 3000;
