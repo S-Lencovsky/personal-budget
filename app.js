@@ -54,6 +54,9 @@ app.put('/envelopes/:name', (req, res) => {
 
     // Handle money extraction if 'amount' is provided
     if (amount !== undefined) {
+        if (amount <= 0) {
+            return res.status(400).json({ message: 'Amount should be a positive number.' }); // Checking amount is not below 0
+        }
         if (envelope.budget >= amount) {
             envelope.budget -= amount;  // Deduct from envelope budget
             totalBudget -= amount;      // Adjust total budget
@@ -94,6 +97,26 @@ app.delete('/envelopes/:name', (req, res) => {
     envelopes = envelopes.filter(e => e.name.toLowerCase() !== req.params.name.toLowerCase());
     totalBudget -= envelope.budget;
     res.json({ message: 'Envelope deleted', envelope });
+});
+
+// POST request to transfer money between envelopes
+app.post('/transfer', (req, res) => {
+    const { fromName, toName, amount } = req.body;
+    const fromEnvelope = envelopes.find(e => e.name.toLowerCase() === fromName.toLowerCase());
+    const toEnvelope = envelopes.find(e => e.name.toLowerCase() === toName.toLowerCase());
+    if (!fromEnvelope || !toEnvelope) {
+        return res.status(404).json({ message: 'Envelope not found.' });
+    }
+    if (fromEnvelope.budget < amount) {
+        return res.status(400).json({ message: 'Insufficient funds in the envelope.' });
+    }
+    if (toEnvelope.budget + amount > originalTotalBudget) {
+        return res.status(400).json({ message: 'New budget exceeds total budget limit.' });
+    }
+    fromEnvelope.budget -= amount;
+    toEnvelope.budget += amount;
+    totalBudget -= amount;
+    res.json({ message: 'Money transferred', fromEnvelope, toEnvelope });
 });
 
 // Start the server
