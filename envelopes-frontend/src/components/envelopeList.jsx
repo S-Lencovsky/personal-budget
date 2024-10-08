@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { getAllEnvelopes } from '../services/envelopes';
+import axios from 'axios';
 
-const EnvelopeList = () => {
+const EnvelopesList = () => {
     const [envelopes, setEnvelopes] = useState([]);
 
     useEffect(() => {
-        const fetchEnvelopes = async () => {
-            const response = await getAllEnvelopes();
-            setEnvelopes(response);
-        };
-        fetchEnvelopes();
+        axios.get('http://localhost:3000/envelopes')
+            .then(response => {
+                setEnvelopes(response.data);
+            })
+            .catch(error => {
+                console.log("Error fetching envelopes:", error);
+            });
     }, []);
 
     return (
         <div>
-            <h1>All Envelopes</h1>
+            <h1>Envelopes</h1>
             <ul>
                 {envelopes.map((envelope) => (
                     <li key={envelope.name}>{envelope.name}</li>
@@ -24,4 +26,4 @@ const EnvelopeList = () => {
     );
 };
 
-export default EnvelopeList;
+export default EnvelopesList;

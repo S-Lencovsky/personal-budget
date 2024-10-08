@@ -1,34 +1,52 @@
 import React from 'react';
-import {BrowserRouter as Router, Route, Link, Routes} from 'react-router-dom';
-import EnvelopeList from './components/envelopeList';
-import CreateEnvelope from './components/CreateEnvelope';
-import TransferMoney from './components/transferMoney';
-import DeleteEnvelope from './components/deleteEnvelope';
+import EnvelopeList from './components/EnvelopeList';
+import AddEnvelope from './components/AddEnvelope';
+import UpdateEnvelope from './components/UpdateEnvelope';
+import FundsTransfer from './components/FundsTransfer';
 
 import './App.css';
+import { envelopes } from '../../budgetData';
 
+function App() {
+  const [envelopes, setEnvelopes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const App = () => {
+  useEffect(() => {
+    fetch('http://localhost:3000/envelopes')
+      .then(response => {
+        if(!response.ok) {
+          throw new Error("Error fetching envelopes");
+        }
+        return response.json();
+  })
+  .then(data => {
+    setEnvelopes(data);
+    setLoading(false);
+  })
+  .catch(error => {
+    setError(error.message);
+    setLoading(false);
+  });
+  }, []);
+
+ if (loading) {
+   return <div>Loading...</div>;
+ }
+
+ if (error) {
+   return <div>Error: {error}</div>;
+ }
+
   return (
-    <Router>
     <div className="App">
-        <h1>Envelope Manager</h1>
-        <nav>
-          <ul><li><Link to="/">Envelopes</Link></li>
-          <li><Link to="/create">Create</Link></li>
-          <li><Link to="/transfer">Transfer</Link></li>
-          <li><Link to="/delete">Delete</Link></li></ul>
-        </nav>
-
-        <Routes>
-        <Route exact path="/" element={<EnvelopeList/>}/>
-        <Route path="/create" element={<CreateEnvelope/>}/>
-        <Route path="/transfer" element={<TransferMoney/>}/>
-        <Route path="/delete" element={<DeleteEnvelope name={"Some Envelope"}/>}/>
-      </Routes>
+      <h1>Envelopes</h1>
+      <EnvelopeList envelopes={envelopes} />
+      <AddEnvelope />
+      <UpdateEnvelope />
+      <FundsTransfer />
     </div>
-    </Router>
   );
-};
+}
 
 export default App;
