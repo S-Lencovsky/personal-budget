@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 
-const UpdateEnvelope = () => {
+const UpdateEnvelope = ({onUpdateEnvelope}) => {
     const [name, setName] = useState('');
     const [budget, setBudget] = useState(0);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const newUpdate = { name, budget: parseFloat(budget) };
         try {
-            await axios.put(`http://localhost:3000/envelopes/${name}`, { name, budget: parseFloat(budget) });
+            await axios.put(`http://localhost:3000/envelopes/${name}`, newUpdate);
             alert('Envelope updated successfully');
+            onUpdateEnvelope(newUpdate);
         } catch (error) {
             console.log('Error updating envelope:', error);
         }

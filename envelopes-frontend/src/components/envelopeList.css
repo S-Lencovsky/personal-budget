@@ -1,0 +1,17 @@
+/* EnvelopeList.css */
+
+.envelope-list {
+    margin: 20px 0;
+}
+
+.envelope-item {
+    padding: 10px;
+    background-color:#d3d3d3;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.envelope-item:hover {
+    background-color: #28a745;
+}

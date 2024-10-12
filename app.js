@@ -1,10 +1,17 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const { envelopes: initialEnvelopes, totalBudget: originalTotalBudget } = require('./budgetData.js');
 
 // Middleware to parse JSON request body
-app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:3001', // Allow requests from frontend on port 3001
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify the allowed methods if necessary
+    allowedHeaders: 'Content-Type',
+    credentials: true
+}));
 
+app.use(express.json());
 // Use the imported global variables
 let envelopes = initialEnvelopes;
 let totalBudget = originalTotalBudget;

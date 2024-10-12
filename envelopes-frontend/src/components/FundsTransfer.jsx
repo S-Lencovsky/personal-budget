@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './fundsTransfer.css';
 
-const FundsTransfer = () => {
+const FundsTransfer = ({onFundsTransfer}) => {
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [amount, setAmount] = useState(0);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const newTransfer = { from, to, amount: parseFloat(amount) };
         try {
-            await axios.put(`http://localhost:3000/envelopes/${from}/transfer/${to}`, { amount: parseFloat(amount) });
+            await axios.put(`http://localhost:3000/envelopes/${from}/transfer/${to}`, newTransfer);
             alert('Funds transferred successfully');
+            onFundsTransfer(newTransfer);
         } catch (error) {
             console.log('Error transferring funds:', error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="fundsTransfer">
             <h2>Funds Transfer</h2>
             <div>
                 <label>From:</label>
